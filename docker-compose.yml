@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  generator:
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            device_ids: ['0']
+            capabilities: [gpu]
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./data:/app/data:rw
+    build: generator
+    environment:
+      - TZ=Europe/Moscow
+      - N_PREDICTIONS=1
+
+  upscaler:
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            device_ids: ['0']
+            capabilities: [gpu]
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./data:/app/data:rw
+    build: upscaler
+    environment:
+      - TZ=Europe/Moscow
+      - RATIO=4
