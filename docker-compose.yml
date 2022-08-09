@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   generator:
+    restart: always
     deploy:
       mode: replicated
       replicas: 0
@@ -20,6 +21,7 @@ services:
       # - N_PREDICTIONS=1
 
   upscaler:
+    restart: always
     deploy:
       mode: replicated
       replicas: 0
@@ -39,6 +41,7 @@ services:
       # - RATIO=4
 
   server:
+    restart: always
     deploy:
       mode: replicated
       replicas: 1
