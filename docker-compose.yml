@@ -16,6 +16,10 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - ./data:/app/data:rw
     build: generator
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       - TZ=Europe/Moscow
       # - N_PREDICTIONS=1
@@ -36,6 +40,10 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - ./data:/app/data:rw
     build: upscaler
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       - TZ=Europe/Moscow
       # - RATIO=4
@@ -50,6 +58,10 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - ./data:/app/data:rw
     build: server
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "10000:10000"
     environment:
