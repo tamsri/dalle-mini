@@ -143,8 +143,9 @@ def main():
                     img = Image.fromarray(np.asarray(decoded_img * 255, dtype=np.uint8))
                     # save to ./data/generated/
                     img.save('./data/generated/'+prompt_file+'_'+str(i)+'.png')
-                # remove file from 'data/requests' folder
-                os.remove('./data/requests/'+prompt_file)
+                # remove file from 'data/requests' folder if exists
+                if os.path.exists("./data/requests/"+prompt_file):
+                    os.remove('./data/requests/'+prompt_file)
 
         else:
             if have_a_job:

@@ -155,7 +155,9 @@ def main():
                     save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
                 cv2.imwrite(save_path, output)
                 logger.info(f'Saved {save_path}')
-                os.remove(path)
+                # remove file, if exists
+                if os.path.isfile(path):
+                    os.remove(path)
         else:
             if have_a_job:
                 logger.info("Waiting for a job..")
