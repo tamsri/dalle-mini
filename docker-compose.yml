@@ -4,7 +4,7 @@ services:
     restart: always
     deploy:
       mode: replicated
-      replicas: 0
+      replicas: 1
       resources:
         reservations:
           devices:
@@ -24,7 +24,7 @@ services:
     restart: always
     deploy:
       mode: replicated
-      replicas: 0
+      replicas: 1
       resources:
         reservations:
           devices:
