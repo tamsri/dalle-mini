@@ -99,27 +99,18 @@ def main():
         if len(files) > 0:
             have_a_job = True
             logger.info("Job received!")
-            # fliename example:
-            # '2022-01-01_00-00-00['user_id']'+str(uuid.uuid4())+'.png'
-            # each file contains 1 prompt string
             # get the earliest prompt
             prompt_file = sorted(files)[0]
             # read prompt string from file
             with open("./data/requests/"+prompt_file, "r") as f:
                 prompts = [f.read()]
 
-            """prompts = [
-            "sunset over a lake in the mountains",
-            "the Eiffel tower landing on the moon"
-            ]"""
-
             tokenized_prompts = processor(prompts)
 
             tokenized_prompt = replicate(tokenized_prompts)
 
             # number of predictions per prompt
-            # n_predictions = int(os.environ.get("N_PREDICTIONS", "8"))
-            n_predictions = extract_value(prompt_file, r'p\[(\d+)\]p')
+            n_predictions = int(extract_value(prompt_file, r'p\[(\d+)\]p'))
 
             # We can customize generation parameters (see https://huggingface.co/blog/how-to-generate)
             gen_top_k = None

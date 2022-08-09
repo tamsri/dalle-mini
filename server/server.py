@@ -18,7 +18,7 @@ async def call_test(request):
 async def call_request(request):
     request_str = json.loads(str(await request.text()))
     prompts = json.loads(request_str)
-    logger.info("prompts: {}".format(prompts))
+    logger.info("call_request prompts: {}".format(prompts))
     for p in prompts:
         id = str(uuid.uuid4())
         filename = ''
@@ -33,11 +33,19 @@ async def call_request(request):
     return web.Response(text=json.dumps(prompts), content_type="text/html")
 
 
+async def call_result(request):
+    request_str = json.loads(str(await request.text()))
+    filename = json.loads(request_str)
+    logger.info("call_result filename: {}".format(filename))    
+    return web.Response(text=filename, content_type="text/html")
+
+
 def main():    
     logger.info("Starting server")
     app = web.Application(client_max_size=1024**3)
     app.router.add_route('GET', '/test', call_test)
     app.router.add_route('POST', '/request', call_request)
+    app.router.add_route('POST', '/result', call_result)
     web.run_app(app, port=os.environ.get('PORT', ''))
 
 
