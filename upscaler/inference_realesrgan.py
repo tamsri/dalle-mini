@@ -6,6 +6,7 @@ import logging
 import time
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+import re
 
 
 def extract_value(filename, pattern):
