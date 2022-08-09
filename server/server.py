@@ -37,16 +37,21 @@ async def call_result(request):
     filename = json.loads(request_str)
     logger.info("call_result filename: {}".format(filename))
     files = os.listdir("./data/generated")
-    if len(files) > 0:
-        # check if file exists in 'data/generated' folder
-        if os.path.exists("./data/generated/"+filename):
+    #if len(files) > 0:
+    # check if file with name filename* in 'data/generated' folder
+    for f in sorted(files):
+        if f.startswith(filename):
             # return file
             with open("./data/generated/"+filename, "rb") as f:
-                return web.Response(body=f.read(), content_type="image/png")
-        else:
-            return web.Response(text="File not found", content_type="text/html")
-    else:
-        return web.Response(text="File not found", content_type="text/html")
+                data = f.read()
+            # remove file from 'data/generated' folder if exists
+            if os.path.exists("./data/generated/"+filename):
+                os.remove('./data/generated/'+filename)
+            return web.Response(body=data, content_type="image/png")
+    #else:
+    #    return web.Response(text="File not found", content_type="text/html")
+    #else:
+    return web.Response(text="File not found", content_type="text/html")
 
 
 def main():    
