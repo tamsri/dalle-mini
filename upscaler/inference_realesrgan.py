@@ -1,12 +1,25 @@
 import argparse
 import cv2
-# import glob
 import os
 from basicsr.archs.rrdbnet_arch import RRDBNet
 import logging
 import time
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+
+
+def extract_value(filename, pattern):
+    """
+    Extract value from filename
+    :param filename:
+    :param pattern:
+    :return:
+    """
+    match = re.search(pattern, filename)
+    if match:
+        return match.group(1)
+    else:
+        return None
 
 
 def main():
@@ -105,7 +118,8 @@ def main():
         if len(files) > 0:
             have_a_job = True
             logger.info("Job received!")
-            path = './data/generated/'+str(sorted(files)[0])
+            filename = str(sorted(files)[0])
+            path = './data/generated/'+ filename
             logger.info("Path: " + path)
             # for idx, path in enumerate(paths):
             imgname, extension = os.path.splitext(os.path.basename(path))
@@ -122,7 +136,8 @@ def main():
                 if args.face_enhance:
                     _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
                 else:
-                    output, _ = upsampler.enhance(img, outscale=args.outscale)
+                    upscale_ratio = int(extract_value(filename, r'r\[(\d+)\]r'))
+                    output, _ = upsampler.enhance(img, outscale = upscale_ratio)
             except RuntimeError as error:
                 print('Error', error)
                 print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')

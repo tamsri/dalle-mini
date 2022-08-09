@@ -10,11 +10,23 @@ from flax.training.common_utils import shard_prng_key
 import numpy as np
 from PIL import Image
 import os
-# import sys
-# import re
 import logging
 import time
-# import uuid
+import re
+
+
+def extract_value(filename, pattern):
+    """
+    Extract value from filename
+    :param filename:
+    :param pattern:
+    :return:
+    """
+    match = re.search(pattern, filename)
+    if match:
+        return match.group(1)
+    else:
+        return None
 
 
 def main():
@@ -106,7 +118,8 @@ def main():
             tokenized_prompt = replicate(tokenized_prompts)
 
             # number of predictions per prompt
-            n_predictions = int(os.environ.get("N_PREDICTIONS", "8"))
+            # n_predictions = int(os.environ.get("N_PREDICTIONS", "8"))
+            n_predictions = extract_value(prompt_file, r'p\[(\d+)\]p')
 
             # We can customize generation parameters (see https://huggingface.co/blog/how-to-generate)
             gen_top_k = None

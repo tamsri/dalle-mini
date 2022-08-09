@@ -17,7 +17,7 @@ services:
     build: generator
     environment:
       - TZ=Europe/Moscow
-      - N_PREDICTIONS=1
+      # - N_PREDICTIONS=1
 
   upscaler:
     deploy:
@@ -36,7 +36,7 @@ services:
     build: upscaler
     environment:
       - TZ=Europe/Moscow
-      - RATIO=4
+      # - RATIO=4
 
   server:
     deploy:
@@ -47,5 +47,8 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - ./data:/app/data:rw
     build: server
+    ports:
+      - "10000:10000"
     environment:
       - TZ=Europe/Moscow
+      - PORT=10000
