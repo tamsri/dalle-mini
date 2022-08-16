@@ -1,12 +1,22 @@
 from aiohttp import web
+import aiohttp_cors
+
 import os
 import json
 import uuid
 from datetime import datetime as dt
 import logging
 
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+cors = aiohttp_cors.setup(app, defaults={
+    "*": aiohttp_cors.ResourceOptions(
+        allow_credentials=True,
+        expose_headers="*",
+        allow_headers="*")
+})
 
 
 async def call_test(request):
@@ -57,6 +67,10 @@ def main():
     app.router.add_route('GET', '/test', call_test)
     app.router.add_route('POST', '/request', call_request)
     app.router.add_route('POST', '/result', call_result)
+    
+    for route in list(app.router.routes()):
+        cors.add(route)
+        
     web.run_app(app, port=os.environ.get('PORT', ''))
 
 
