@@ -11,13 +11,6 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-cors = aiohttp_cors.setup(app, defaults={
-    "*": aiohttp_cors.ResourceOptions(
-        allow_credentials=True,
-        expose_headers="*",
-        allow_headers="*")
-})
-
 
 async def call_test(request):
     content = "get ok"
@@ -67,6 +60,16 @@ def main():
     app.router.add_route('GET', '/test', call_test)
     app.router.add_route('POST', '/request', call_request)
     app.router.add_route('POST', '/result', call_result)
+
+    cors = aiohttp_cors.setup(
+        app,
+        defaults={
+            "*": aiohttp_cors.ResourceOptions(
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*")
+        }
+    )
     
     for route in list(app.router.routes()):
         cors.add(route)
