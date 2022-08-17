@@ -119,6 +119,7 @@ def main():
         if len(files) > 0:
             have_a_job = True
             logger.info("Job received!")
+            time.sleep(1)
             filename = str(sorted(files)[0])
             path = './data/generated/'+ filename
             logger.info("Path: " + path)

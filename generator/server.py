@@ -99,6 +99,7 @@ def main():
         if len(files) > 0:
             have_a_job = True
             logger.info("Job received!")
+            time.sleep(1)
             # get the earliest prompt
             prompt_file = sorted(files)[0]
             # read prompt string from file
