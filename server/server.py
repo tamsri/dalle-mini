@@ -35,6 +35,31 @@ async def call_request(request):
     
     return web.Response(text=json.dumps(prompts), content_type="text/html")
 
+async def call_upload(request):
+    request_str = json.loads(str(await request.text()))
+    requested_files = json.loads(request_str)
+    upscaled_path = './data/upscaled/'
+    files = os.listdir(upscaled_path)
+    # HARD CODE
+    JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4YmFmYTI3Mi05YTdjLTRhYmYtOWM2Yi04N2QxNzYwZmRiNWMiLCJlbWFpbCI6InN1cGF3YXRAaW50ZWxlay5haSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI2MTE5ODVhOTNlYTViMDk1NGFhMCIsInNjb3BlZEtleVNlY3JldCI6Ijg5YWUwZTcwMmFkZmM3ZDA4ZGU1N2Q1M2M2ZGYyYmZiZDcwYmE0MmZkY2E2NTdlOTIyZDZmM2E1Yjk1OGVhYjYiLCJpYXQiOjE2NjA3NjU2MTR9.u8gByuVBa2bsH9sa2BLh2Bb0NunLqG0ZaqQZTZnvwHw"
+    URL = "https://api.pinata.cloud/pinning/pinFileToIPFS"
+    headers = {
+      'Authorization': f'Bearer {JWT}'
+    }
+    URIs = []
+    for requested_file in sorted(requested_files):
+        file_path = upscaled_path + requested_file
+        payload={'pinataOptions': '{"cidVersion": 1}',
+                 'pinataMetadata': '{"name": "test", 
+                 "keyvalues": {"company": "autoNFT"}}'}
+        files=[
+          ('file', (requested_file, open(file_path,'rb'),'application/octet-stream'))
+        ]
+        response = requests.request("POST", url,
+                                            headers=headers, data=payload, files=files)
+        URIs.append(response.text)
+    
+    return web.Response(text=json.dumps(URIs), content_type="text/html")
 
 async def call_result(request):
     request_str = json.loads(str(await request.text()))
@@ -62,7 +87,7 @@ def main():
     app.router.add_route('GET', '/test', call_test)
     app.router.add_route('POST', '/request', call_request)
     app.router.add_route('POST', '/result', call_result)
-
+    app.router.add_route('POST', '/upload', call_upload)
     cors = aiohttp_cors.setup(
         app,
         defaults={
