@@ -55,7 +55,7 @@ async def call_upload(request):
         files=[
           ('file', (requested_file, open(file_path,'rb'),'application/octet-stream'))
         ]
-        response = requests.request("POST", url,
+        response = requests.request("POST", URL,
                                             headers=headers, data=payload, files=files)
         URIs.append(response.text)
     
