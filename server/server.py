@@ -6,6 +6,7 @@ import json
 import uuid
 from datetime import datetime as dt
 import logging
+import time
 
 
 logging.basicConfig(level=logging.INFO)
@@ -44,6 +45,7 @@ async def call_result(request):
     # check if file with name filename* in 'data/generated' folder
     for file_name in sorted(files):
         if file_name.startswith(requested_file_name):
+            time.sleep(1)
             # return file
             with open(upscaled_path+file_name, "rb") as f:
                 data = f.read()
